@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="ToDoListSample.MainPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toDoListSample="clr-namespace:ToDoListSample"
+             x:DataType="toDoListSample:MainViewModel">
+    <StackLayout>
+        <Picker x:Name="categoryPicker" Title="Категория" SelectedItem="{Binding selectCategory}">
+            <Picker.Items>
+                <x:String>Дом</x:String>
+                <x:String>Работа</x:String>
+                <x:String>Покупки</x:String>
+                <x:String>Без категории</x:String>
+            </Picker.Items>
+        </Picker>
+        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, *">
+        
+            <Entry x:Name="Entry"
+                   Margin="3"
+                   Placeholder="Введите наименование задания" />
+            <ImageButton Grid.Row="0"
+                         Grid.Column="1"
+                         Command="{Binding AddItemCommand}"
+                         CommandParameter="{Binding Source={x:Reference Entry}, Path=Text}"
+                         Source="plus_circle_outline.svg" />
+
+            <CollectionView Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Margin="3"
+                            ItemsSource="{Binding ToDoItems}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="3" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="toDoListSample:ToDoItem">
+                        <SwipeView>
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem Command="{Binding Source={RelativeSource FindAncestorBindingContext, AncestorType={x:Type toDoListSample:MainViewModel}}, Path=DeleteItemCommand}"
+                                               CommandParameter="{Binding}"
+                                               IconImageSource="delete.svg" />
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <Grid Margin="3" ColumnDefinitions="Auto, *, Auto, Auto">
+                                <CheckBox Grid.Column="0" Margin="3" IsChecked="{Binding Done}" />
+                                <StackLayout Grid.Column="1">
+                                    <Entry  
+                                           x:Name="Entry2"
+                                           Margin="3"
+                                           BackgroundColor="LightGray"
+                                           Placeholder="Введите наименование задания" 
+                                           Text="{Binding Title}"/>
+                                </StackLayout>
+                                <StackLayout Grid.Column="2">
+                                    <Picker  x:Name="categoryPicker" Title="Категория" SelectedItem="{Binding Category}" BackgroundColor="LightGray">
+                                        <Picker.Items>
+                                            <x:String>Дом</x:String>
+                                            <x:String>Работа</x:String>
+                                            <x:String>Покупки</x:String>
+                                            <x:String>Без категории</x:String>
+                                        </Picker.Items>
+                                    </Picker>
+                                </StackLayout>
+                                
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </StackLayout>
+</ContentPage>
